@@ -1,0 +1,19 @@
+{
+  "@microsoft/generator-sharepoint": {
+    "useGulp": false,
+    "plusBeta": false,
+    "isCreatingSolution": false,
+    "nodeVersion": "22.20.0",
+    "sdksVersions": {},
+    "version": "1.22.2",
+    "libraryName": "sp-fx-march-training",
+    "libraryId": "66dd19db-f103-46ac-a4a4-b307ac96d46c",
+    "environment": "spo",
+    "packageManager": "npm",
+    "solutionName": "SPFxMarchTraining",
+    "solutionShortDescription": "SPFxMarchTraining description",
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "componentType": "webpart"
+  }
+}

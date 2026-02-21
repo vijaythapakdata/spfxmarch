@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "sp-fx-march-training-client-side-solution",
+    "id": "66dd19db-f103-46ac-a4a4-b307ac96d46c",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.22.2"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "SPFxMarchTraining description"
+      },
+      "longDescription": {
+        "default": "SPFxMarchTraining description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "sp-fx-march-training Feature",
+        "description": "The feature that activates elements of the sp-fx-march-training solution.",
+        "id": "da6084d1-2bf3-43a9-9f5b-d897b0f574a5",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/sp-fx-march-training.sppkg"
+  }
+}
