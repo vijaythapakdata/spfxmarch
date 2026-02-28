@@ -6,6 +6,9 @@ import { ChoiceGroup, Dropdown, PrimaryButton, TextField } from '@fluentui/react
 import { ListName } from '../Enum/FixedValues';
 import ChildComponent from './ChildComponent';
 import UseStateHooks from './ReactHooks/UseStateHooks';
+import UseEffectHooks from './ReactHooks/useEffectHooks';
+import UseCallBackHooks from './ReactHooks/useCallback';
+import UseMemoHooks from './ReactHooks/useMemoHooks';
 const  HelloWorldWebpart:React.FC<IHelloWorldWebpartProps>=(props)=>{
 
   //variable and their types-> in js variables are nothing but container to store data and data can be of any type like string, number, boolean, array, object etc. but in ts we have to define the type of variable at the time of declaration.
@@ -221,7 +224,14 @@ onClick={()=>alert("I am cancel button")}
   {props.userDisplayName}
   {/* Counter Application */}
   <p>CounterApplication:</p>
-  <UseStateHooks/>
+ 
+  {/* UseFfect hooks */}
+  <p>UseEffect Hooks</p>
+   <UseEffectHooks/>
+   <p>Use Callback</p>
+  <UseCallBackHooks/>
+  <p>use Memo</p>
+  <UseMemoHooks/>
     </>
   )
 }

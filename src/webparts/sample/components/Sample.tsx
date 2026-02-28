@@ -1,43 +1,110 @@
 import * as React from 'react';
-import styles from './Sample.module.scss';
+// import styles from './Sample.module.scss';
 import type { ISampleProps } from './ISampleProps';
-import { escape } from '@microsoft/sp-lodash-subset';
+import { IFormState } from '../../../CommonMethods/IFormState';
+import { CommonSharePointServiceApi } from '../../../Service/SharePointFormApi';
+import {sp} from "@pnp/sp/presets/all";
+import { Dialog } from '@microsoft/sp-dialog';
+import { useState,useCallback,useEffect } from 'react';
+import { PrimaryButton, Slider, TextField, Toggle } from '@fluentui/react';
+const Sample:React.FC<ISampleProps>=(props)=>{
+  const [formdata,setformData]=useState<IFormState>({
+    Name:"",
+    Email:"",
+    Age:"",
+    Compensation:"",
+    FullAddress:"",
+    Permission:false,
+    Score:1
+  });
+  useEffect(()=>{
+    sp.setup({
+      spfxContext:props.context as any
+    });
 
-export default class Sample extends React.Component<ISampleProps> {
-  public render(): React.ReactElement<ISampleProps> {
-    const {
-      description,
-      isDarkTheme,
-      environmentMessage,
-      hasTeamsContext,
-      userDisplayName
-    } = this.props;
+  },[]);
 
-    return (
-      <section className={`${styles.sample} ${hasTeamsContext ? styles.teams : ''}`}>
-        <div className={styles.welcome}>
-          <img alt="" src={isDarkTheme ? require('../assets/welcome-dark.png') : require('../assets/welcome-light.png')} className={styles.welcomeImage} />
-          <h2>Well done, {escape(userDisplayName)}!</h2>
-          <div>{environmentMessage}</div>
-          <div>Web part property value: <strong>{escape(description)}</strong></div>
-        </div>
-        <div>
-          <h3>Welcome to SharePoint Framework!</h3>
-          <p>
-            The SharePoint Framework (SPFx) is a extensibility model for Microsoft Viva, Microsoft Teams and SharePoint. It&#39;s the easiest way to extend Microsoft 365 with automatic Single Sign On, automatic hosting and industry standard tooling.
-          </p>
-          <h4>Learn more about SPFx development:</h4>
-          <ul className={styles.links}>
-            <li><a href="https://aka.ms/spfx" target="_blank" rel="noreferrer">SharePoint Framework Overview</a></li>
-            <li><a href="https://aka.ms/spfx-yeoman-graph" target="_blank" rel="noreferrer">Use Microsoft Graph in your solution</a></li>
-            <li><a href="https://aka.ms/spfx-yeoman-teams" target="_blank" rel="noreferrer">Build for Microsoft Teams using SharePoint Framework</a></li>
-            <li><a href="https://aka.ms/spfx-yeoman-viva" target="_blank" rel="noreferrer">Build for Microsoft Viva Connections using SharePoint Framework</a></li>
-            <li><a href="https://aka.ms/spfx-yeoman-store" target="_blank" rel="noreferrer">Publish SharePoint Framework applications to the marketplace</a></li>
-            <li><a href="https://aka.ms/spfx-yeoman-api" target="_blank" rel="noreferrer">SharePoint Framework API reference</a></li>
-            <li><a href="https://aka.ms/m365pnp" target="_blank" rel="noreferrer">Microsoft 365 Developer Community</a></li>
-          </ul>
-        </div>
-      </section>
-    );
+  const createForm=async()=>{
+    try{
+const _service=new CommonSharePointServiceApi(props.siteurl);
+await _service.addItems(formdata);
+Dialog.alert("Form created successfully");
+//reset form
+setformData({
+  Name:"",
+  Email:"",
+  Age:"",
+  Compensation:"",
+  FullAddress:"",
+  Permission:false,
+  Score:1
+});
+    }
+    catch(err){
+      Dialog.alert("Error creating form: "+ err);
+    }
   }
+  //event handlers
+  const handleInputChange=useCallback((field:keyof IFormState,value:string|boolean|number):void=>{
+    setformData(prev=>({...prev,[field]:value}));
+  },[])
+  return(
+    <>
+    <TextField
+    label='Name'
+    value={formdata.Name}
+    onChange={(_,event)=>handleInputChange("Name",event||"")}
+    placeholder='enter your name here...'
+    />
+     <TextField
+    label='Email Address'
+    value={formdata.Email}
+    onChange={(_,event)=>handleInputChange("Email",event||"")}
+    placeholder='enter your email here...'
+    />
+     <TextField
+    label='Age'
+    value={formdata.Age}
+    onChange={(_,event)=>handleInputChange("Age",event||"")}
+    placeholder='enter your age here...'
+    />
+     <TextField
+    label='Compensation'
+    value={formdata.Compensation}
+    onChange={(_,event)=>handleInputChange("Compensation",event||"")}
+    placeholder='enter your compensation here...'
+    />
+    {/* Slider */}
+    <Slider
+    label='Score'
+    min={1}
+    max={100}
+    value={formdata.Score}
+    onChange={(value)=>handleInputChange("Score",value)}
+    />
+    {/* Boolean */}
+    <Toggle
+    label='Permission'
+    onText='Allowed'
+    offText='Denied'
+    checked={formdata.Permission}
+    onChange={(_,checked)=>handleInputChange("Permission",!!checked)}
+    />
+     <TextField
+    label='Full Address'
+    value={formdata.FullAddress}
+    onChange={(_,event)=>handleInputChange("FullAddress",event||"")}
+    placeholder='enter your full address here...'
+    multiline
+    rows={5}
+    />
+    <br/>
+    <PrimaryButton
+    text='Save'
+    onClick={createForm}
+    iconProps={{iconName:'Save'}}
+    />
+    </>
+  )
 }
+export default Sample
