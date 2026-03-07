@@ -1,3 +1,4 @@
 export enum ListName{
-    FirstList="First List"
+    FirstList="First List",
+    Cities="Cities"
 }

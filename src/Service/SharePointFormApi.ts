@@ -19,7 +19,13 @@ const items=await list.items.add({
   Salary:parseFloat(formData.Compensation),
   Address:formData.FullAddress,
   Permission:formData.Permission ,
-  Score:formData.Score
+  Score:formData.Score,
+  AdminId:formData.AdminId,
+  ManagerId:{results:formData.ManagerId},
+  Department:formData.Department,
+  Gender:formData.Gender,
+  CityId:formData.City,
+  Skills:{results:formData.Skills}
 });
 return items;
     }

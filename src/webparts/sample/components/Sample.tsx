@@ -6,7 +6,10 @@ import { CommonSharePointServiceApi } from '../../../Service/SharePointFormApi';
 import {sp} from "@pnp/sp/presets/all";
 import { Dialog } from '@microsoft/sp-dialog';
 import { useState,useCallback,useEffect } from 'react';
-import { PrimaryButton, Slider, TextField, Toggle } from '@fluentui/react';
+import { ChoiceGroup, Dropdown, PrimaryButton, Slider, TextField, Toggle } from '@fluentui/react';
+import { IPeoplePickerContext, PeoplePicker, PrincipalType } from "@pnp/spfx-controls-react/lib/PeoplePicker";
+import { handleAdminPicker, handleManagerPicker } from '../../../CommonMethods/IPeoplePicker';
+import { handleSkillsChange } from '../../../CommonMethods/SkillsEvent';
 const Sample:React.FC<ISampleProps>=(props)=>{
   const [formdata,setformData]=useState<IFormState>({
     Name:"",
@@ -15,7 +18,15 @@ const Sample:React.FC<ISampleProps>=(props)=>{
     Compensation:"",
     FullAddress:"",
     Permission:false,
-    Score:1
+    Score:1,
+    Admin:"",
+    AdminId:0,
+    Manager:[],
+    ManagerId:[],
+    Department:"",
+    City:"",
+    Gender:"",
+    Skills:[]
   });
   useEffect(()=>{
     sp.setup({
@@ -37,7 +48,15 @@ setformData({
   Compensation:"",
   FullAddress:"",
   Permission:false,
-  Score:1
+  Score:1,
+    Admin:"",
+    AdminId:0,
+    Manager:[],
+    ManagerId:[],
+       Department:"",
+    City:"",
+    Gender:"",
+    Skills:[]
 });
     }
     catch(err){
@@ -72,7 +91,8 @@ setformData({
     label='Compensation'
     value={formdata.Compensation}
     onChange={(_,event)=>handleInputChange("Compensation",event||"")}
-    placeholder='enter your compensation here...'
+    prefix='$'
+    suffix='USD'
     />
     {/* Slider */}
     <Slider
@@ -89,6 +109,66 @@ setformData({
     offText='Denied'
     checked={formdata.Permission}
     onChange={(_,checked)=>handleInputChange("Permission",!!checked)}
+    />
+    {/* Admin */}
+    <PeoplePicker
+    context={props.context as any}
+    titleText="Admin"
+    personSelectionLimit={1}
+    showtooltip={true}
+    defaultSelectedUsers={[formdata.Admin?formdata.Admin:""]}
+    onChange={(items)=>handleAdminPicker(items,setformData)}
+    
+    principalTypes={[PrincipalType.User]}
+    resolveDelay={1000} 
+    ensureUser={true}
+    webAbsoluteUrl={props.siteurl}
+    />
+    {/* Manager */}
+    <PeoplePicker
+    context={props.context as any}
+    titleText="Manager"
+    personSelectionLimit={2}
+    showtooltip={true}
+    defaultSelectedUsers={formdata.Manager}
+    onChange={(items)=>handleManagerPicker(items,setformData)}
+    principalTypes={[PrincipalType.User]}
+    resolveDelay={1000} 
+    ensureUser={true}
+    webAbsoluteUrl={props.siteurl}
+    />
+    {/* Department */}
+    <Dropdown
+    label='Department'
+    options={props.departmentoptions}
+    selectedKey={formdata.Department}
+    onChange={(_,options)=>handleInputChange("Department",options?.key as string)}
+    placeholder='--select--'
+    />
+    {/* City */}
+    <Dropdown
+    label='City'
+    options={props.cityoptions}
+    selectedKey={formdata.City}
+    onChange={(_,options)=>handleInputChange("City",options?.key as string)}
+    placeholder='--select--'
+    />
+    {/* Skills */}
+    <Dropdown
+    label='Skills'
+    options={props.skillsoptions}
+   defaultSelectedKeys={formdata.Skills}
+   multiSelect
+  onChange={(_,option)=>handleSkillsChange(option!,formdata,setformData)}
+    placeholder='--select--'
+    />
+    {/* Radio Button */}
+    <ChoiceGroup
+    label='Gender'
+    options={props.genderoptions}
+    selectedKey={formdata.Gender}
+    onChange={(_,options)=>handleInputChange("Gender",options?.key as string)}
+   
     />
      <TextField
     label='Full Address'

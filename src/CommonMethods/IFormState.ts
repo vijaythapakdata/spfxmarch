@@ -6,4 +6,12 @@ export interface IFormState{
     Compensation:any;
     FullAddress:string;
     Permission:boolean;
+    Admin:any;
+    AdminId:any;
+    Manager:any[];
+    ManagerId:any[];
+    Department:string;
+    Gender:string;
+    Skills:any[];
+    City:any;
 }

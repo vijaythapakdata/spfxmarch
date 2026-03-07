@@ -9,6 +9,7 @@ import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import * as strings from 'SampleWebPartStrings';
 import Sample from './components/Sample';
 import { ISampleProps } from './components/ISampleProps';
+import GetChoiceValueClassApi from '../../Service/ChoiceServiceApi';
 
 export interface ISampleWebPartProps {
   description: string;
@@ -16,14 +17,22 @@ export interface ISampleWebPartProps {
 
 export default class SampleWebPart extends BaseClientSideWebPart<ISampleWebPartProps> {
 
- 
+ private choiceClasVal:GetChoiceValueClassApi|undefined
+ protected async onInit(): Promise<void> {
+this.choiceClasVal=new GetChoiceValueClassApi(this.context);
+return super.onInit();
+ }
 
-  public render(): void {
+  public async render(): Promise<void> {
     const element: React.ReactElement<ISampleProps> = React.createElement(
       Sample,
       {
        context:this.context,
-       siteurl:this.context.pageContext.web.absoluteUrl
+       siteurl:this.context.pageContext.web.absoluteUrl,
+       departmentoptions:await this.choiceClasVal?.getDropdownValues(this.context.pageContext.web.absoluteUrl,"Department"),
+       genderoptions:await this.choiceClasVal?.getDropdownValues(this.context.pageContext.web.absoluteUrl,"Gender"),
+       skillsoptions:await this.choiceClasVal?.getDropdownValues(this.context.pageContext.web.absoluteUrl,"Skills"),
+       cityoptions:await this.choiceClasVal?.LookuValues(),
       }
     );
 
